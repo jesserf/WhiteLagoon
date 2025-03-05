@@ -1,27 +1,44 @@
 ﻿@model IEnumerable<WhiteLagoon.Domain.Entities.Villa>
 
-<h1>Villas</h1>
+<div class="w-100 card border-0 p-4">
+    <div class="card-header bg-success bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="text-white py-2">Villas</h1>
+            </div>
+        </div>
+    </div>
+    <div class="card-body border p-4">
+        <div class="row pb-3">
+            <div class="col-6 offset-6 text-end">
+                <a asp-asp-controller="Villa" asp-action="" class="btn btn-secondary">
+                    Create New Villa
+                </a>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Occupancy</th>
+                    <th>Square Feet</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ojb in Model)
+                {
+                    <tr>
+                        <td>@ojb.Name</td>
+                        <td>@ojb.Description</td>
+                        <td>@ojb.Occupancy</td>
+                        <td>@ojb.Sqft</td>
+                        <td>@ojb.Price</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Occupancy</th>
-            <th>Square Feet</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var ojb in Model)
-        {
-            <tr>
-                <td>@ojb.Name</td>
-                <td>@ojb.Description</td>
-                <td>@ojb.Occupancy</td>
-                <td>@ojb.Sqft</td>
-                <td>@ojb.Price</td>
-            </tr>
-        }
-    </tbody>
-</table>
