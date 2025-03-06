@@ -35,8 +35,10 @@ namespace WhiteLagoon.Web.Controllers
             {
                 _db.Villas.Add(obj); //adds object to database
                 _db.SaveChanges(); //confirms insertion
+                TempData["success"] = $"Villa {obj.Name} created successfully";
                 return RedirectToAction("Index", "Villa"); //redirects to index page after insertion, (ActionName, ControllerName)
             }
+            TempData["error"] = $"Villa could not be created";
 
             return View(); //returns view if model state is not valid
         }
@@ -62,9 +64,11 @@ namespace WhiteLagoon.Web.Controllers
             {
                 _db.Villas.Update(obj); //adds object to database
                 _db.SaveChanges(); //confirms insertion
+                TempData["success"] = $"Villa {obj.Name} updated successfully";
                 return RedirectToAction("Index", "Villa"); //redirects to index page after insertion, (ActionName, ControllerName)
             }
 
+            TempData["error"] = $"Villa could not be updated";
             return View(); //returns view if model state is not valid
         }
         public IActionResult Delete(int villaId)
@@ -85,8 +89,10 @@ namespace WhiteLagoon.Web.Controllers
             {
                 _db.Villas.Remove(objFromDb); //adds object to database
                 _db.SaveChanges(); //confirms insertion
+                TempData["success"] = $"Villa {objFromDb.Name} deleted successfully";
                 return RedirectToAction("Index", "Villa"); //redirects to index page after insertion, (ActionName, ControllerName)
             }
+            TempData["error"] = $"Villa could not be deleted";
 
             return View(); //returns view if model state is not valid
         }
