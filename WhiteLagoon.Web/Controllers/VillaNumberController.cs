@@ -28,7 +28,8 @@ namespace WhiteLagoon.Web.Controllers
                 Value = u.Id.ToString()
             }).ToList();
 
-            ViewData["VillaList"] = list;
+            //ViewData["VillaList"] = list;
+            ViewBag.VillaList = list;
             return View();
         }
 
