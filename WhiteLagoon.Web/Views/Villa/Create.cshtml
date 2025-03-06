@@ -42,6 +42,7 @@
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div asp-validation-summary="ModelOnly"></div> <!-- Displays Error Message -->
+                <!-- <div asp-validation-summary="All"> summarises all errors-->
                 <div class="row pt-2">
                     <div class="col-6 col-md-3">
                         <button type="submit" class="btn btn-success w-100">
@@ -58,3 +59,11 @@
         </form>
     </div>
 </div>
+
+<!-- JS -->
+<!-- Adds partial client side validation-->
+@section Scripts{
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+}
