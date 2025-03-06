@@ -40,5 +40,27 @@ namespace WhiteLagoon.Web.Controllers
 
             return View(); //returns view if model state is not valid
         }
+
+        public IActionResult Update(Villa obj)
+        {
+            _db.Remove(obj.Id); //deletes object from database
+
+            return View(); //returns view if model state is not valid
+        }
+        public IActionResult Delete(Villa obj)
+        {
+            if (obj.Name == obj.Description) //checks if name and description are the same
+            {
+                ModelState.AddModelError("Description", "Name and Description cannot be the same"); //adds error message to model state
+            }
+            if (ModelState.IsValid) //checks if value aligns with data annotations
+            {
+                _db.Villas.Add(obj); //adds object to database
+                _db.SaveChanges(); //confirms insertion
+                return RedirectToAction("Index", "Villa"); //redirects to index page after insertion, (ActionName, ControllerName)
+            }
+
+            return View(); //returns view if model state is not valid
+        }
     }
 }
