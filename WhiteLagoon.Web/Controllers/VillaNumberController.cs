@@ -24,8 +24,7 @@ namespace WhiteLagoon.Web.Controllers
 
         public IActionResult Create()
         {
-            VillaNumberVM villaNumberVM = PopulateVillaNameList();
-            return View(villaNumberVM);
+            return View(PopulateVillaNameList());
         }
 
         [HttpPost]
@@ -50,6 +49,32 @@ namespace WhiteLagoon.Web.Controllers
             obj = PopulateVillaNameList();
             return View(obj);
         }
+        public IActionResult Update(int villaNumberId)
+        {
+            VillaNumberVM villaNumberVm = PopulateVillaNameList(villaNumberId);
+            if (villaNumberVm.VillaNumber is null)
+            {
+                TempData["error"] = "Villa Number does not exist";
+                return RedirectToAction("Error", "Home"); //redirects to error page
+            }
+            return View(villaNumberVm);
+        }
+
+        [HttpPost]
+        public IActionResult Update(VillaNumberVM obj)
+        {
+            if (ModelState.IsValid && obj.VillaNumber.Villa_Number > 0)
+            {
+                _db.VillaNumbers.Update(obj.VillaNumber);
+                _db.SaveChanges();
+                TempData["success"] = $"Villa Number {obj.VillaNumber.Villa_Number} updated successfully";
+                return RedirectToAction("Index", "VillaNumber");
+            }
+
+            TempData["error"] = $"Villa Number could not be updated";
+            obj = PopulateVillaNameList();
+            return View(obj);
+        }
 
         private VillaNumberVM PopulateVillaNameList()
         {
@@ -60,7 +85,20 @@ namespace WhiteLagoon.Web.Controllers
                     Text = u.Name,
                     Value = u.Id.ToString()
                 })
-            }; ;
+            };
+        }
+
+        private VillaNumberVM PopulateVillaNameList(int number)
+        {
+            return new()
+            {
+                VillaList = _db.Villas.ToList().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+                VillaNumber = _db.VillaNumbers.FirstOrDefault(u => u.Villa_Number == number)
+            };
         }
     }
 }
