@@ -17,7 +17,7 @@ namespace WhiteLagoon.Web.Controllers
         //creates index page
         public IActionResult Index()
         {
-            var villas = _villaRepo.GetAllVillas();
+            var villas = _villaRepo.GetAll();
             return View(villas);
         }
         //creates a create form
@@ -35,7 +35,7 @@ namespace WhiteLagoon.Web.Controllers
             }
             if (ModelState.IsValid) //checks if value aligns with data annotations
             {
-                _villaRepo.AddVilla(obj); //adds object to database
+                _villaRepo.Add(obj); //adds object to database
                 _villaRepo.Save(); //confirms insertion
                 TempData["success"] = $"Villa {obj.Name} created successfully";
                 return RedirectToAction(nameof(Index)); //redirects to index page after insertion, (ActionName, ControllerName)
@@ -47,7 +47,7 @@ namespace WhiteLagoon.Web.Controllers
 
         public IActionResult Update(int villaId)
         {
-            Villa? obj = _villaRepo.GetVilla(u => u.Id == villaId);
+            Villa? obj = _villaRepo.Get(u => u.Id == villaId);
 
             if (obj == null)
                 return RedirectToAction("Error", "Home");
@@ -75,7 +75,7 @@ namespace WhiteLagoon.Web.Controllers
         }
         public IActionResult Delete(int villaId)
         {
-            Villa? obj = _villaRepo.GetVilla(u => u.Id == villaId);
+            Villa? obj = _villaRepo.Get(u => u.Id == villaId);
 
             if (obj is null)
                 return RedirectToAction("Error", "Home");
@@ -86,10 +86,10 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost] //identifies post endpoint
         public IActionResult Delete(Villa obj)
         {
-            Villa? objFromDb = _villaRepo.GetVilla(u => u.Id == obj.Id);
+            Villa? objFromDb = _villaRepo.Get(u => u.Id == obj.Id);
             if (objFromDb is not null) //checks if value aligns with data annotations
             {
-                _villaRepo.DeleteVilla(objFromDb); //adds object to database
+                _villaRepo.Delete(objFromDb); //adds object to database
                 _villaRepo.Save(); //confirms insertion
                 TempData["success"] = $"Villa {objFromDb.Name} deleted successfully";
                 return RedirectToAction(nameof(Index)); //redirects to index page after insertion, (ActionName, ControllerName)

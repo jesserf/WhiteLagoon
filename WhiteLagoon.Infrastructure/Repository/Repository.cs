@@ -1,33 +1,69 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using WhiteLagoon.Application.Common.Interfaces;
+using WhiteLagoon.Domain.Entities;
+using WhiteLagoon.Infrastructure.Data;
 
 namespace WhiteLagoon.Infrastructure.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        public void AddVilla(T entity)
+        private readonly ApplicationDbContext _db;
+        internal DbSet<T> dbSet;
+        public Repository(ApplicationDbContext db)
         {
-            throw new NotImplementedException();
+            dbSet = db.Set<T>();
+            _db = db;
+        }
+        public void Add(T entity)
+        {
+            dbSet.Add(entity);
         }
 
-        public void DeleteVilla(T entity)
+        public void Delete(T entity)
         {
-            throw new NotImplementedException();
+            dbSet.Remove(entity);
         }
 
-        public IEnumerable<T> GetAllVillas(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = _db.Set<T>();
+            if (filter is not null)
+            {
+                query = query.Where(filter);
+            }
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                //Villa, VillaNumber - case sensitive
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return query.ToList();
         }
 
-        public T GetVilla(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = _db.Set<T>();
+            if (filter is not null)
+            {
+                query = query.Where(filter);
+            }
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                //Villa, VillaNumber - case sensitive
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return query.FirstOrDefault();
         }
     }
 }
