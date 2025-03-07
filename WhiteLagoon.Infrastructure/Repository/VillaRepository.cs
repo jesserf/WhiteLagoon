@@ -34,7 +34,7 @@ namespace WhiteLagoon.Infrastructure.Repository
         public IEnumerable<Villa> GetAllVillas(Expression<Func<Villa, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<Villa> query = _db.Set<Villa>();
-            if (filter != null)
+            if (filter is not null)
             {
                 query = query.Where(filter);
             }
@@ -52,7 +52,7 @@ namespace WhiteLagoon.Infrastructure.Repository
         public Villa GetVilla(Expression<Func<Villa, bool>> filter, string? includeProperties = null)
         {
             IQueryable<Villa> query = _db.Set<Villa>();
-            if (filter != null)
+            if (filter is not null)
             {
                 query = query.Where(filter);
             }
