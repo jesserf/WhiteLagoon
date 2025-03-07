@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -32,12 +33,38 @@ namespace WhiteLagoon.Infrastructure.Repository
 
         public IEnumerable<Villa> GetAllVillas(Expression<Func<Villa, bool>>? filter = null, string? includeProperties = null)
         {
-            throw new NotImplementedException();
+            IQueryable<Villa> query = _db.Set<Villa>();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if(!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                //Villa, VillaNumber - case sensitive
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return query.ToList();
         }
 
-        public IEnumerable<Villa> GetVilla(Expression<Func<Villa, bool>> filter, string? includeProperties = null)
+        public Villa GetVilla(Expression<Func<Villa, bool>> filter, string? includeProperties = null)
         {
-            throw new NotImplementedException();
+            IQueryable<Villa> query = _db.Set<Villa>();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                //Villa, VillaNumber - case sensitive
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return query.FirstOrDefault();
         }
 
         public void Save()

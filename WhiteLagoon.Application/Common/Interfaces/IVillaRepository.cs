@@ -11,7 +11,7 @@ namespace WhiteLagoon.Application.Common.Interfaces
     {
         //Generic implementation to retrieve all villas
         IEnumerable<Villa> GetAllVillas(Expression<Func<Villa, bool>>? filter = null, string? includeProperties = null);
-        IEnumerable<Villa> GetVilla(Expression<Func<Villa, bool>> filter, string? includeProperties = null);
+        Villa GetVilla(Expression<Func<Villa, bool>> filter, string? includeProperties = null);
         void AddVilla(Villa entity);
         void UpdateVilla(Villa entity);
         void DeleteVilla(Villa entity);
