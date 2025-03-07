@@ -38,7 +38,7 @@ namespace WhiteLagoon.Web.Controllers
                 _db.VillaNumbers.Add(obj.VillaNumber);
                 _db.SaveChanges();
                 TempData["success"] = $"Villa Number {obj.VillaNumber.Villa_Number} created successfully";
-                return RedirectToAction("Index", "VillaNumber");
+                return RedirectToAction(nameof(Index));
             }
 
             if (isVillaNumberExist)
@@ -68,7 +68,7 @@ namespace WhiteLagoon.Web.Controllers
                 _db.VillaNumbers.Update(obj.VillaNumber);
                 _db.SaveChanges();
                 TempData["success"] = $"Villa Number {obj.VillaNumber.Villa_Number} updated successfully";
-                return RedirectToAction("Index", "VillaNumber");
+                return RedirectToAction(nameof(Index));
             }
 
             TempData["error"] = $"Villa Number could not be updated";
@@ -95,7 +95,7 @@ namespace WhiteLagoon.Web.Controllers
                 _db.VillaNumbers.Remove(objFromDb);
                 _db.SaveChanges();
                 TempData["success"] = $"Villa Number {obj.VillaNumber.Villa_Number} has been removed";
-                return RedirectToAction("Index", "VillaNumber");
+                return RedirectToAction(nameof(Index));
             }
 
             TempData["error"] = $"Villa Number could not be deleted";
