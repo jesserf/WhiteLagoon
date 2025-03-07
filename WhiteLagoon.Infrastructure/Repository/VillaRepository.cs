@@ -6,19 +6,28 @@ using System.Text;
 using System.Threading.Tasks;
 using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Domain.Entities;
+using WhiteLagoon.Infrastructure.Data;
 
 namespace WhiteLagoon.Infrastructure.Repository
 {
     public class VillaRepository : IVillaRepository
     {
+
+        private readonly ApplicationDbContext _db;
+
+        public VillaRepository(ApplicationDbContext db)
+        {
+            _db = db;
+        }
+
         public void AddVilla(Villa entity)
         {
-            throw new NotImplementedException();
+            _db.Add(entity);
         }
 
         public void DeleteVilla(Villa entity)
         {
-            throw new NotImplementedException();
+            _db.Remove(entity);
         }
 
         public IEnumerable<Villa> GetAllVillas(Expression<Func<Villa, bool>>? filter = null, string? includeProperties = null)
@@ -33,12 +42,12 @@ namespace WhiteLagoon.Infrastructure.Repository
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _db.SaveChanges();
         }
 
         public void UpdateVilla(Villa entity)
         {
-            throw new NotImplementedException();
+            _db.Villas.Update(entity);
         }
     }
 }
