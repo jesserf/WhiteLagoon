@@ -18,6 +18,11 @@ namespace WhiteLagoon.Infrastructure.Repository
             //dependency injection of both database and villa repository
             _db = db;
             Villa = new VillaRepository(_db);
-        } 
+        }
+
+        public void Save()
+        {
+            _db.SaveChanges();
+        }
     }
 }

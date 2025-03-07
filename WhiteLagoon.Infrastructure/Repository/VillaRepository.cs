@@ -20,11 +20,6 @@ namespace WhiteLagoon.Infrastructure.Repository
         {
             _db = db;
         }
-        //Specific implementation of save changes after modification of database
-        public void Save()
-        {
-            _db.SaveChanges();
-        }
         //Specific implementation to update selected villa
         public void UpdateVilla(Villa entity)
         {

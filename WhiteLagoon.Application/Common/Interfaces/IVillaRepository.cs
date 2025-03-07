@@ -11,6 +11,5 @@ namespace WhiteLagoon.Application.Common.Interfaces
     {
         //Generic implementation to retrieve all villas
         void UpdateVilla(Villa entity);
-        void Save();
     }
 }

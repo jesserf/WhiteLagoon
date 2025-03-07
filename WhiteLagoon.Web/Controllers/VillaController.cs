@@ -36,7 +36,7 @@ namespace WhiteLagoon.Web.Controllers
             if (ModelState.IsValid) //checks if value aligns with data annotations
             {
                 _unitOfWork.Villa.Add(obj); //adds object to database
-                _unitOfWork.Villa.Save(); //confirms insertion
+                _unitOfWork.Save(); //confirms insertion
                 TempData["success"] = $"Villa {obj.Name} created successfully"; //Notification for successful creation
                 return RedirectToAction(nameof(Index)); //redirects to index page after insertion, (ActionName, ControllerName)
             }
@@ -65,7 +65,7 @@ namespace WhiteLagoon.Web.Controllers
             if (ModelState.IsValid && obj.Id>0) //checks if value aligns with data annotations
             {
                 _unitOfWork.Villa.UpdateVilla(obj); //adds object to database
-                _unitOfWork.Villa.Save(); //confirms insertion
+                _unitOfWork.Save(); //confirms insertion
                 TempData["success"] = $"Villa {obj.Name} updated successfully";
                 return RedirectToAction(nameof(Index)); //redirects to index page after insertion, (ActionName, ControllerName)
             }
@@ -91,7 +91,7 @@ namespace WhiteLagoon.Web.Controllers
             if (objFromDb is not null) //checks if value aligns with data annotations
             {
                 _unitOfWork.Villa.Delete(objFromDb); //adds object to database
-                _unitOfWork.Villa.Save(); //confirms insertion
+                _unitOfWork.Save(); //confirms insertion
                 TempData["success"] = $"Villa {objFromDb.Name} deleted successfully"; //Notification for successful deletion
                 return RedirectToAction(nameof(Index)); //redirects to index page after insertion, (ActionName, ControllerName)
             }
