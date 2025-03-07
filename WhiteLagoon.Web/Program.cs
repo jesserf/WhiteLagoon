@@ -7,9 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Dependency Injection for UnitOfWork
 builder.Services.AddDbContext<ApplicationDbContext>(option=> 
-option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //Dependency Injection for Application Database Context
 
 var app = builder.Build();
 

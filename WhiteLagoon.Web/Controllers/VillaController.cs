@@ -8,17 +8,17 @@ namespace WhiteLagoon.Web.Controllers
 {
     public class VillaController : Controller
     {
-        private readonly IVillaRepository _villaRepo; // Add ApplicationDbContext implementation
+        private readonly IUnitOfWork _unitOfWork; // add Repository Wrapper
         //implementation of database or appdbcontext
-        public VillaController(IVillaRepository villaRepo)
+        public VillaController(IUnitOfWork unitOfWork)
         {
-            _villaRepo = villaRepo;
+            _unitOfWork = unitOfWork; //Dependency Injection
         }
         //creates index page
-        public IActionResult Index()
+        public IActionResult Index() //IActionResult is a global return type for action methods
         {
-            var villas = _villaRepo.GetAll();
-            return View(villas);
+            var villas = _unitOfWork.Villa.GetAll(); //gets all villas from database
+            return View(villas); //returns view with villas
         }
         //creates a create form
         public IActionResult Create()
@@ -26,7 +26,7 @@ namespace WhiteLagoon.Web.Controllers
             return View();
         }
 
-        [HttpPost] //identifies post endpoint
+        [HttpPost] //identifies post endpoint, happens when form is submitted
         public IActionResult Create(Villa obj)
         {
             if (obj.Name == obj.Description) //checks if name and description are the same
@@ -35,27 +35,27 @@ namespace WhiteLagoon.Web.Controllers
             }
             if (ModelState.IsValid) //checks if value aligns with data annotations
             {
-                _villaRepo.Add(obj); //adds object to database
-                _villaRepo.Save(); //confirms insertion
-                TempData["success"] = $"Villa {obj.Name} created successfully";
+                _unitOfWork.Villa.Add(obj); //adds object to database
+                _unitOfWork.Villa.Save(); //confirms insertion
+                TempData["success"] = $"Villa {obj.Name} created successfully"; //Notification for successful creation
                 return RedirectToAction(nameof(Index)); //redirects to index page after insertion, (ActionName, ControllerName)
             }
-            TempData["error"] = $"Villa could not be created";
+            TempData["error"] = $"Villa could not be created"; //Notification for failure to create
 
             return View(); //returns view if model state is not valid
         }
-
+        //creates an update form
         public IActionResult Update(int villaId)
         {
-            Villa? obj = _villaRepo.Get(u => u.Id == villaId);
+            Villa? obj = _unitOfWork.Villa.Get(u => u.Id == villaId); //gets object from database where asp-route-villaId is equal to db Id
 
             if (obj == null)
-                return RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home"); //redirects to error page if object is null
 
             return View(obj);
         }
 
-        [HttpPost] //identifies post endpoint
+        [HttpPost] //identifies post endpoint, happens when form is submitted
         public IActionResult Update(Villa obj)
         {
             if (obj.Name == obj.Description) //checks if name and description are the same
@@ -64,8 +64,8 @@ namespace WhiteLagoon.Web.Controllers
             }
             if (ModelState.IsValid && obj.Id>0) //checks if value aligns with data annotations
             {
-                _villaRepo.UpdateVilla(obj); //adds object to database
-                _villaRepo.Save(); //confirms insertion
+                _unitOfWork.Villa.UpdateVilla(obj); //adds object to database
+                _unitOfWork.Villa.Save(); //confirms insertion
                 TempData["success"] = $"Villa {obj.Name} updated successfully";
                 return RedirectToAction(nameof(Index)); //redirects to index page after insertion, (ActionName, ControllerName)
             }
@@ -73,9 +73,10 @@ namespace WhiteLagoon.Web.Controllers
             TempData["error"] = $"Villa could not be updated";
             return View(); //returns view if model state is not valid
         }
+        //creates a delete form
         public IActionResult Delete(int villaId)
         {
-            Villa? obj = _villaRepo.Get(u => u.Id == villaId);
+            Villa? obj = _unitOfWork.Villa.Get(u => u.Id == villaId); //gets object from database where asp-route-villaId is equal to db Id
 
             if (obj is null)
                 return RedirectToAction("Error", "Home");
@@ -83,18 +84,18 @@ namespace WhiteLagoon.Web.Controllers
             return View(obj);
         }
 
-        [HttpPost] //identifies post endpoint
+        [HttpPost] //identifies post endpoint, happens when form is submitted
         public IActionResult Delete(Villa obj)
         {
-            Villa? objFromDb = _villaRepo.Get(u => u.Id == obj.Id);
+            Villa? objFromDb = _unitOfWork.Villa.Get(u => u.Id == obj.Id); //gets object from database where asp-route-villaId is equal to db Id
             if (objFromDb is not null) //checks if value aligns with data annotations
             {
-                _villaRepo.Delete(objFromDb); //adds object to database
-                _villaRepo.Save(); //confirms insertion
-                TempData["success"] = $"Villa {objFromDb.Name} deleted successfully";
+                _unitOfWork.Villa.Delete(objFromDb); //adds object to database
+                _unitOfWork.Villa.Save(); //confirms insertion
+                TempData["success"] = $"Villa {objFromDb.Name} deleted successfully"; //Notification for successful deletion
                 return RedirectToAction(nameof(Index)); //redirects to index page after insertion, (ActionName, ControllerName)
             }
-            TempData["error"] = $"Villa could not be deleted";
+            TempData["error"] = "Villa could not be deleted"; //Notification for failure to delete
 
             return View(); //returns view if model state is not valid
         }

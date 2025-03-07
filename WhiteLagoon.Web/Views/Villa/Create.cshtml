@@ -12,6 +12,9 @@
         <form method="post" class="row">
             <div class="p-3">
                 <div class="form-floating py-1 col-12">
+                    <!-- input is for user input, label is inside input, span is for error notification -->
+                    <!-- asp-for is used for sending which property in entities -->
+                    <!-- asp-validation-for is used to check if user input corresponds to all data annotations from entity -->
                     <input asp-for="Name" class="form-control border shadow"/>
                     <label asp-for="Name" class="ms-2"></label>
                     <span asp-validation-for="Name" class="text-danger"></span>
@@ -50,7 +53,7 @@
                         </button>
                     </div>
                     <div class="col-6 col-md-3">
-                        <a asp-controller="Villa" asp-action="Index" class="btn btn-secondary w-100">
+                        <a asp-controller="Villa" asp-action="Index" class="btn btn-secondary w-100"> <!-- asp-controller to specift controller name, asp-action for the name of action -->
                             <i class="bi bi-x-circle"></i> Cancel
                         </a>
                     </div>
