@@ -15,12 +15,12 @@ namespace WhiteLagoon.Infrastructure.Repository
     {
         private readonly ApplicationDbContext _db;
         internal DbSet<T> dbSet;
-        public Repository(ApplicationDbContext db)
+        public Repository(ApplicationDbContext db) //Dependency Injection for ApplicationDbContext and dbSet
         {
             dbSet = db.Set<T>();
             _db = db;
         }
-        public void Add(T entity)
+        public void Add(T entity) //T Generic class
         {
             dbSet.Add(entity);
         }
