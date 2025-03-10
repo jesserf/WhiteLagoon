@@ -69,6 +69,33 @@ namespace WhiteLagoon.Web.Controllers
             return View(obj);
         }
 
+        public IActionResult Delete(int amenityId)
+        {
+            AmenityVM amenityVM = PopulateVillaNameList(amenityId);
+            if (amenityVM.Amenity is null)
+            {
+                TempData["error"] = "Amenity does not exist";
+                return RedirectToAction("Error", "Home"); //redirects to error page
+            }
+            return View(amenityVM);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(AmenityVM obj)
+        {
+            Amenity? objFromDb = _unitOfWork.Amenity.Get(u => u.Id == obj.Amenity.Id);
+            if (objFromDb is not null)
+            {
+                _unitOfWork.Amenity.Delete(objFromDb);
+                _unitOfWork.Save();
+                TempData["success"] = $"Villa Number {obj.Amenity.Name} has been removed";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["error"] = $"Amenity could not be deleted";
+            return View();
+        }
+
         private AmenityVM PopulateVillaNameList()
         {
             return new()
