@@ -27,7 +27,7 @@ namespace WhiteLagoon.Web.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
         }
-
+        #region Login
         public IActionResult Login(string? returnUrl = null)
         {
             returnUrl??= Url.Content("~/"); //if url is null, set it to the root of the site
@@ -38,6 +38,29 @@ namespace WhiteLagoon.Web.Controllers
             };
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginVM obj)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager
+                    .PasswordSignInAsync(obj.Email, obj.Password, obj.RememberMe, lockoutOnFailure:false); //Sign in the user
+
+                if (result.Succeeded)
+                {
+                    TempData["success"] = $"Login successfully";
+                    redirectToLast(obj.RedirectUrl);
+                }
+                ModelState.AddModelError("", "Invalid login attempt");
+            }
+
+            TempData["error"] = $"Login Failed";
+            return View(obj);
+
+        }
+        #endregion
+        #region Register
         public IActionResult Register()
         {
             if(!_roleManager.RoleExistsAsync(SD.RoleAdmin).GetAwaiter().GetResult()) //if the role does not exist, then create the two roles, GetResult returns a boolean whilte GetAwaiter returns a task
@@ -83,11 +106,7 @@ namespace WhiteLagoon.Web.Controllers
 
                 await _signInManager.SignInAsync(user, isPersistent: false); //Sign in the user
 
-                if(string.IsNullOrEmpty(obj.RedirectUrl))
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-                return LocalRedirect(obj.RedirectUrl);
+                redirectToLast(obj.RedirectUrl);
             }
             foreach (var error in result.Errors)
             {
@@ -99,7 +118,7 @@ namespace WhiteLagoon.Web.Controllers
             return View(obj);
 
         }
-
+        #endregion
         private RegisterVM PopulateRoleList(RegisterVM obj)
         {
             obj.RoleList = _roleManager.Roles.Select(x => new SelectListItem
@@ -109,6 +128,15 @@ namespace WhiteLagoon.Web.Controllers
             });
 
             return obj;
+        }
+
+        private IActionResult redirectToLast(string redirectUrl)
+        {
+            if (string.IsNullOrEmpty(redirectUrl))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return LocalRedirect(redirectUrl);
         }
     }
 }
