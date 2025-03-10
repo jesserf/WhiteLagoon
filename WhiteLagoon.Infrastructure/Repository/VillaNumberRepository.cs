@@ -19,7 +19,7 @@ namespace WhiteLagoon.Infrastructure.Repository
 
         public void UpdateVillaNumber(VillaNumber entity)
         {
-            throw new NotImplementedException();
+            _db.VillaNumbers.Update(entity);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace WhiteLagoon.Web.Controllers
 
         public IActionResult Index()
         {
-            var villaNumbers = _unitOfWork.VillaNumber.GetAll();
+            var villaNumbers = _unitOfWork.VillaNumber.GetAll(includeProperties: "Villa");
             return View(villaNumbers);
         }
 
@@ -32,7 +32,7 @@ namespace WhiteLagoon.Web.Controllers
         public IActionResult Create(VillaNumberVM obj)
         {
             //ModelState.Remove("Villa");
-            bool isVillaNumberExist = _unitOfWork.VillaNumber.Get(u => u.Villa_Number == obj.VillaNumber.Villa_Number);
+            bool isVillaNumberExist = _unitOfWork.VillaNumber.Any(u => u.Villa_Number == obj.VillaNumber.Villa_Number);
             //bool isVillaNumberExist = _db.VillaNumbers.Count(u => u.Villa_Number == obj.VillaNumber.Villa_Number)==0;
             if (ModelState.IsValid && !isVillaNumberExist)
             {

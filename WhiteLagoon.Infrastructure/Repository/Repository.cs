@@ -65,5 +65,10 @@ namespace WhiteLagoon.Infrastructure.Repository
             }
             return query.FirstOrDefault();
         }
+
+        public bool Any(Expression<Func<T, bool>> filter)
+        {
+            return dbSet.Any(filter);
+        }
     }
 }
