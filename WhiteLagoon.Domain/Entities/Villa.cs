@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -34,6 +35,9 @@ namespace WhiteLagoon.Domain.Entities
         public DateTime? CreatedDate { get; set; }
         //Write var? for not required properties
         public DateTime? UpdatedDate { get; set; }
+
+        [ValidateNever] //Write [ValidateNever] to specify that the property is not validated
+        public IEnumerable<Amenity> VillaAmenities { get; set; } //used to load in the amenities for the villa
     }
 }
 

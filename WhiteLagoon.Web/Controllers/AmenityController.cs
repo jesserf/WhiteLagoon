@@ -25,8 +25,7 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost]
         public IActionResult Create(AmenityVM obj)
         {
-            bool isAmenityExist = _unitOfWork.Amenity.Any(u => u.Id == obj.Amenity.Id);
-            if (ModelState.IsValid && !isAmenityExist)
+            if (ModelState.IsValid)
             {
                 _unitOfWork.Amenity.Add(obj.Amenity);
                 _unitOfWork.Save();
@@ -34,10 +33,6 @@ namespace WhiteLagoon.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (isAmenityExist)
-            {
-                ModelState.AddModelError("Amenity.Id", $"Amenity {obj.Amenity.Id} already exists");
-            }
             TempData["error"] = $"Amenity {obj.Amenity.Name} could not be created";
             obj = PopulateVillaNameList();
             return View(obj);
