@@ -68,6 +68,7 @@ namespace WhiteLagoon.Web.Controllers
             }
             if (ModelState.IsValid && obj.Id>0) //checks if value aligns with data annotations
             {
+                AddImages(obj, true); //adds image to object
                 _unitOfWork.Villa.UpdateVilla(obj); //adds object to database
                 _unitOfWork.Save(); //confirms insertion
                 TempData["success"] = $"Villa {obj.Name} updated successfully";
@@ -104,22 +105,39 @@ namespace WhiteLagoon.Web.Controllers
             return View(); //returns view if model state is not valid
         }
 
-        private void AddImages(Villa obj)
+        private void AddImages(Villa obj, bool? isUpdate = false)
         {
             if (obj.Image is not null) //if there is an image upload
             {
                 string filename = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName); //renames file name to random guid, you can add more logic to rename the file, such as accepting png but rejecting jpg, get extension is used to get file name extension
                 //if image is valid
                 string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, @"images\VillaImage"); //creates path for image uploads
+
+                if(isUpdate == true) //if it is an update
+                    MaintainImages(obj); //maintains image
+
                 //to add the image
                 using var fileStream = new FileStream(Path.Combine(imagePath, filename), FileMode.Create); //creates file stream
                 obj.Image.CopyTo(fileStream); //copies image to file stream
 
-                obj.ImageUrl = @"images\VillaImage\" + filename; //sets image url to file path
+                obj.ImageUrl = @"\images\VillaImage\" + filename; //sets image url to file path
             }
-            else
+            else if (isUpdate == false) //if there is no image upload and it is an update
             {
                 obj.ImageUrl = "https://via.placehold.co/600x400"; //sets image url to placeholder image
+            }
+        }
+
+        private void MaintainImages(Villa obj)
+        {
+            if (!string.IsNullOrEmpty(obj.ImageUrl)) //if there is an image upload
+            {
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, obj.ImageUrl.TrimStart('\\')); //gets old path of image and removes backslashes
+                
+                if (System.IO.File.Exists(oldImagePath)) //checks if file exists
+                {
+                    System.IO.File.Delete(oldImagePath); //deletes file
+                }
             }
         }
     }
