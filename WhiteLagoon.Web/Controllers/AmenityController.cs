@@ -42,6 +42,32 @@ namespace WhiteLagoon.Web.Controllers
             obj = PopulateVillaNameList();
             return View(obj);
         }
+        public IActionResult Update(int amenityId)
+        {
+            AmenityVM amenityVM = PopulateVillaNameList(amenityId);
+            if (amenityVM.Amenity is null)
+            {
+                TempData["error"] = "Amenity does not exist";
+                return RedirectToAction("Error", "Home"); //redirects to error page
+            }
+            return View(amenityVM);
+        }
+
+        [HttpPost]
+        public IActionResult Update(AmenityVM obj)
+        {
+            if (ModelState.IsValid && obj.Amenity.Id > 0)
+            {
+                _unitOfWork.Amenity.UpdateAmenity(obj.Amenity);
+                _unitOfWork.Save();
+                TempData["success"] = $"Amenity {obj.Amenity.Name} updated successfully";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["error"] = $"Amenity could not be updated";
+            obj = PopulateVillaNameList();
+            return View(obj);
+        }
 
         private AmenityVM PopulateVillaNameList()
         {
