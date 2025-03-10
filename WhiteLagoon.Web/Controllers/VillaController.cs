@@ -95,6 +95,7 @@ namespace WhiteLagoon.Web.Controllers
             Villa? objFromDb = _unitOfWork.Villa.Get(u => u.Id == obj.Id); //gets object from database where asp-route-villaId is equal to db Id
             if (objFromDb is not null) //checks if value aligns with data annotations
             {
+                RemoveOldImage(objFromDb); //removes old image
                 _unitOfWork.Villa.Delete(objFromDb); //adds object to database
                 _unitOfWork.Save(); //confirms insertion
                 TempData["success"] = $"Villa {objFromDb.Name} deleted successfully"; //Notification for successful deletion
@@ -114,7 +115,7 @@ namespace WhiteLagoon.Web.Controllers
                 string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, @"images\VillaImage"); //creates path for image uploads
 
                 if(isUpdate == true) //if it is an update
-                    MaintainImages(obj); //maintains image
+                    RemoveOldImage(obj); //maintains image
 
                 //to add the image
                 using var fileStream = new FileStream(Path.Combine(imagePath, filename), FileMode.Create); //creates file stream
@@ -128,7 +129,7 @@ namespace WhiteLagoon.Web.Controllers
             }
         }
 
-        private void MaintainImages(Villa obj)
+        private void RemoveOldImage(Villa obj)
         {
             if (!string.IsNullOrEmpty(obj.ImageUrl)) //if there is an image upload
             {
