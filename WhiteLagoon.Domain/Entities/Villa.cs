@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +27,8 @@ namespace WhiteLagoon.Domain.Entities
         public int Occupancy { get; set; }
         [Display(Name = "Image URL")] //Write [Display] to specify the display name of the property
         //Write [Url] to specify that the property is a URL
+        [NotMapped] //Write [NotMapped] to specify that the property is not mapped to the database
+        public IFormFile? Image { get; set; }
         public string? ImageUrl { get; set; } //Write var? for not required properties
         //Write var? for not required properties
         public DateTime? CreatedDate { get; set; }
