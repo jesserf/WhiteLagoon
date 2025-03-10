@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Infrastructure.Data;
@@ -10,6 +11,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Dependency Injection for UnitOfWork
 builder.Services.AddDbContext<ApplicationDbContext>(option=> 
 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //Dependency Injection for Application Database Context
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
 
