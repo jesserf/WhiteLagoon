@@ -73,6 +73,11 @@ namespace WhiteLagoon.Web.Controllers
         }
 
         #endregion
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
         #region Register
         public IActionResult Register()
         {
