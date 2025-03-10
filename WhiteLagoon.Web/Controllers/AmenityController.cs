@@ -18,6 +18,30 @@ namespace WhiteLagoon.Web.Controllers
             var amenities = _unitOfWork.Amenity.GetAll(includeProperties: "Villa");
             return View(amenities);
         }
+        public IActionResult Create()
+        {
+            return View(PopulateVillaNameList());
+        }
+        [HttpPost]
+        public IActionResult Create(AmenityVM obj)
+        {
+            bool isAmenityExist = _unitOfWork.Amenity.Any(u => u.Id == obj.Amenity.Id);
+            if (ModelState.IsValid && !isAmenityExist)
+            {
+                _unitOfWork.Amenity.Add(obj.Amenity);
+                _unitOfWork.Save();
+                TempData["success"] = $"Amenity {obj.Amenity.Name} created successfully";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (isAmenityExist)
+            {
+                ModelState.AddModelError("Amenity.Id", $"Amenity {obj.Amenity.Id} already exists");
+            }
+            TempData["error"] = $"Amenity {obj.Amenity.Name} could not be created";
+            obj = PopulateVillaNameList();
+            return View(obj);
+        }
 
         private AmenityVM PopulateVillaNameList()
         {
