@@ -50,7 +50,11 @@ namespace WhiteLagoon.Web.Controllers
                 if (result.Succeeded)
                 {
                     TempData["success"] = $"Login successfully";
-                    redirectToLast(obj.RedirectUrl);
+                    if (string.IsNullOrEmpty(obj.RedirectUrl)) //If the redirect url is null, redirect to the home page
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    return LocalRedirect(obj.RedirectUrl); //Redirect to previous page
                 }
                 ModelState.AddModelError("", "Invalid login attempt");
             }
@@ -106,7 +110,11 @@ namespace WhiteLagoon.Web.Controllers
 
                 await _signInManager.SignInAsync(user, isPersistent: false); //Sign in the user
 
-                redirectToLast(obj.RedirectUrl);
+                if (string.IsNullOrEmpty(obj.RedirectUrl))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                return LocalRedirect(obj.RedirectUrl);
             }
             foreach (var error in result.Errors)
             {
@@ -130,13 +138,5 @@ namespace WhiteLagoon.Web.Controllers
             return obj;
         }
 
-        private IActionResult redirectToLast(string redirectUrl)
-        {
-            if (string.IsNullOrEmpty(redirectUrl))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            return LocalRedirect(redirectUrl);
-        }
     }
 }
