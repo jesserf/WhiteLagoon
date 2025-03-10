@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
 using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Domain.Entities;
+using WhiteLagoon.Web.ViewModels;
 
 namespace WhiteLagoon.Web.Controllers
 {
@@ -25,8 +26,14 @@ namespace WhiteLagoon.Web.Controllers
             _roleManager = roleManager;
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
+            returnUrl??= Url.Content("~/"); //if url is null, set it to the root of the site
+
+            LoginVM loginVM = new ()
+            {
+                RedirectUrl = returnUrl
+            };
             return View();
         }
         public IActionResult Register()
