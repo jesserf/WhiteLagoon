@@ -10,9 +10,11 @@ namespace WhiteLagoon.Web.Controllers
     {
         private readonly IUnitOfWork _unitOfWork; // add Repository Wrapper
         //implementation of database or appdbcontext
-        public VillaController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment; // add WebHostEnvironment for file uploads
+        public VillaController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork; //Dependency Injection
+            _webHostEnvironment = webHostEnvironment; //Dependency Injection
         }
         //creates index page
         public IActionResult Index() //IActionResult is a global return type for action methods
@@ -35,6 +37,8 @@ namespace WhiteLagoon.Web.Controllers
             }
             if (ModelState.IsValid) //checks if value aligns with data annotations
             {
+                AddImages(obj); //adds image to object
+
                 _unitOfWork.Villa.Add(obj); //adds object to database
                 _unitOfWork.Save(); //confirms insertion
                 TempData["success"] = $"Villa {obj.Name} created successfully"; //Notification for successful creation
@@ -98,6 +102,25 @@ namespace WhiteLagoon.Web.Controllers
             TempData["error"] = "Villa could not be deleted"; //Notification for failure to delete
 
             return View(); //returns view if model state is not valid
+        }
+
+        private void AddImages(Villa obj)
+        {
+            if (obj.Image is not null) //if there is an image upload
+            {
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName); //renames file name to random guid, you can add more logic to rename the file, such as accepting png but rejecting jpg, get extension is used to get file name extension
+                //if image is valid
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, @"images\VillaImage"); //creates path for image uploads
+                //to add the image
+                using var fileStream = new FileStream(Path.Combine(imagePath, filename), FileMode.Create); //creates file stream
+                obj.Image.CopyTo(fileStream); //copies image to file stream
+
+                obj.ImageUrl = @"images\VillaImage\" + filename; //sets image url to file path
+            }
+            else
+            {
+                obj.ImageUrl = "https://via.placehold.co/600x400"; //sets image url to placeholder image
+            }
         }
     }
 }
