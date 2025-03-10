@@ -18,7 +18,7 @@ namespace WhiteLagoon.Web.Controllers
         public AccountController(IUnitOfWork unitOfWork, 
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, 
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager) //using rolemanager we can create roles
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -38,6 +38,12 @@ namespace WhiteLagoon.Web.Controllers
         }
         public IActionResult Register()
         {
+            if(!_roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult()) //if the role does not exist, then create the two roles, GetResult returns a boolean whilte GetAwaiter returns a task
+            {
+                _roleManager.CreateAsync(new IdentityRole("Admin")).Wait(); //Will wait for the async method to finish
+                _roleManager.CreateAsync(new IdentityRole("Customer")).Wait();
+            }
+
             return View();
         }
     }

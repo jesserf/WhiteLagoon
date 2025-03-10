@@ -1,4 +1,6 @@
-﻿<div class="container pt-5">
+﻿@model RegisterVM
+
+<div class="container pt-5">
     <div class="card shadow border ">
         <div class="card-header bg-success bg-gradient ml-0 py-4">
             <div class="row">
@@ -12,24 +14,24 @@
                 <div class="col-md-12">
                     <form class="row" method="post">
                         <div class="form-floating mb-3 col-md-12">
-                            <input class="form-control" aria-required="true" />
-                            <label class="ms-2 text-muted">Email</label>
+                            <input asp-for="Email" class="form-control" aria-required="true" />
+                            <label asp-for="Email" class="ms-2 text-muted"></label>
                         </div>
                         <div class="form-floating mb-3 col-md-6">
-                            <input class="form-control" />
-                            <label class="ms-2 text-muted">Full Name</label>
+                            <input asp-for="Name" class="form-control" />
+                            <label asp-for="Name" class="ms-2 text-muted">Full Name</label>
                         </div>
                         <div class="form-floating mb-3 col-md-6">
-                            <input class="form-control" />
-                            <label class="ms-2 text-muted">Phone Number</label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <label asp-for="PhoneNumber" class="ms-2 text-muted"></label>
                         </div>
                         <div class="form-floating mb-3 col-md-6">
-                            <input class="form-control" />
-                            <label class="ms-2 text-muted">Password</label>
+                            <input asp-for="Password" class="form-control" />
+                            <label asp-for="Password" class="ms-2 text-muted"></label>
                         </div>
                         <div class="form-floating mb-3 col-md-6">
-                            <input class="form-control" />
-                            <label class="ms-2 text-muted">Confirm Password</label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <label asp-for="ConfirmPassword" class="ms-2 text-muted"></label>
                         </div>
 
                         <div class="form-floating mb-3 col-md-6">
