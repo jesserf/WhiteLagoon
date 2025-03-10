@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Threading.Tasks;
 using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Application.Common.Utility;
 using WhiteLagoon.Domain.Entities;
@@ -63,6 +64,14 @@ namespace WhiteLagoon.Web.Controllers
             return View(obj);
 
         }
+        #endregion
+        #region Logout
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
         #endregion
         #region Register
         public IActionResult Register()
