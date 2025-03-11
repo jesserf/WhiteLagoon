@@ -19,6 +19,15 @@ builder.Services.ConfigureApplicationCookie(options =>//Override default paths f
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
+builder.Services.Configure<IdentityOptions> (options =>//Override default password requirements
+{
+    options.Password.RequiredLength = 3;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+});
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
