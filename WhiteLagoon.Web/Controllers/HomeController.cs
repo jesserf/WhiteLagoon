@@ -26,13 +26,6 @@ public class HomeController : Controller
         return View(homeVm);
     }
     [HttpPost]
-    public IActionResult Index(HomeVM homeVM)
-    {
-        homeVM.VillaList = _unitOfWork.Villa.GetAll(includeProperties: "VillaAmenities");
-
-        return View(homeVM);
-    }
-
     public IActionResult GetVillasByDate(int nights, DateOnly checkInDate)
     {
         var villaList = _unitOfWork.Villa.GetAll(includeProperties: "VillaAmenities").ToList(); //get all villas
