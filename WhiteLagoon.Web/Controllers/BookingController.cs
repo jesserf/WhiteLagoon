@@ -16,11 +16,12 @@ namespace WhiteLagoon.Web.Controllers
             Booking booking = new()
             {
                 VillaId = villaId,
-                Villa = _unitOfWork.Villa.Get(u=>u.Id == villaId, includeProperties:"VillaAmenity"),
+                Villa = _unitOfWork.Villa.Get(u=>u.Id == villaId, includeProperties: "VillaAmenities"),
                 CheckInDate = checkInDate,
                 Nights = nights,
                 CheckOutDate = checkInDate.AddDays(nights),
             };
+            booking.TotalCost = booking.Villa.Price * nights;
             return View(booking);
         }
     }
