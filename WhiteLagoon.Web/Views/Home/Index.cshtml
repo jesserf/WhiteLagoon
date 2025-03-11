@@ -70,6 +70,7 @@
 @section scripts{
     <script>
         function fnLoadVillaList() {
+            $(".spinner").show(); //Show the loading spinner
             var objData = {
                 checkInDate: $("#CheckInDate").val(), //get asp-for data
                 nights: $("#Nights").val() //get asp-for data
@@ -82,6 +83,15 @@
                 success: function (data) {
                     $("#VillasList").empty(); //Clear the existing list
                     $("#VillasList").html(data); //Load the new list
+                    $(".spinner").hide();
+                },
+                false: function (response) {
+                    $(".spinner").hide();
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    $(".spinner").hide();
+                    alert(response.responseText);
                 }
             });
         }
