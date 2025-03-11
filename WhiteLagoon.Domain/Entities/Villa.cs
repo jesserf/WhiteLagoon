@@ -38,6 +38,9 @@ namespace WhiteLagoon.Domain.Entities
 
         [ValidateNever] //Write [ValidateNever] to specify that the property is not validated
         public IEnumerable<Amenity> VillaAmenities { get; set; } //used to load in the amenities for the villa
+
+        [NotMapped] //Write [NotMapped] to specify that the property is not mapped to the database
+        public bool isAvailable { get; set; } = true; //used to check if the villa is available
     }
 }
 

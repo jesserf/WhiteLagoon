@@ -91,7 +91,7 @@ namespace WhiteLagoon.Web.Controllers
 
             RegisterVM registerVM = PopulateRoleList(new RegisterVM()); //Populate the role list
 
-            registerVM.RedirectUrl = returnUrl; //puts returnurl to redirecturl
+                registerVM.RedirectUrl = returnUrl; //puts returnurl to redirecturl
             return View(registerVM);
         }
 
