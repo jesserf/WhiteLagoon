@@ -11,5 +11,7 @@ namespace WhiteLagoon.Application.Common.Interfaces
     {
         //Generic implementation to retrieve all amenities
         void Update(Booking entity);
+        void UpdateStatus(int bookingId, string bookingStatus);
+        void UpdateStripePaymentID(int bookingId, string sessionId, string paymentIntentId);
     }
 }
