@@ -12,6 +12,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Dependency Injection for UnitOfWork
 builder.Services.AddDbContext<ApplicationDbContext>(option=> 
 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //Dependency Injection for Application Database Context
+builder.Services.ConfigureApplicationCookie(options =>//Override default paths for login, logout and access denied
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 

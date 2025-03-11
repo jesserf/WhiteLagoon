@@ -95,46 +95,39 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterVM obj)
         {
-
-            ApplicationUser user = new()
+            if (ModelState.IsValid)
             {
-                Name = obj.Name,
-                Email = obj.Email,
-                PhoneNumber = obj.PhoneNumber,
-                NormalizedEmail = obj.Email.ToUpper(), //Normalized Email = Email in uppercase
-                EmailConfirmed = true,
-                UserName = obj.Email,
-                CreatedDate = DateTime.Now //When the account was created
-            };
 
-            var result = _userManager.CreateAsync(user, obj.Password).GetAwaiter().GetResult(); //Create the user with the password
+                ApplicationUser user = CopyUserData(obj);
 
-            if (result.Succeeded)
-            {
-                TempData["success"] = $"Account created successfully";
-                if (!string.IsNullOrEmpty(obj.Role))
+                var result = _userManager.CreateAsync(user, obj.Password).GetAwaiter().GetResult(); //Create the user with the password
+
+                if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, obj.Role); //Add the user to the role
-                    //AddToRolesAsync can take a list of roles e.g. IEnumerables
-                }
-                else
-                {
-                    await _userManager.AddToRoleAsync(user, SD.RoleCustomer); //If no role is selected, add the user to the customer role
-                }
+                    TempData["success"] = $"Account created successfully";
+                    if (!string.IsNullOrEmpty(obj.Role))
+                    {
+                        await _userManager.AddToRoleAsync(user, obj.Role); //Add the user to the role
+                        //AddToRolesAsync can take a list of roles e.g. IEnumerables
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.RoleCustomer); //If no role is selected, add the user to the customer role
+                    }
 
-                await _signInManager.SignInAsync(user, isPersistent: false); //Sign in the user
+                    await _signInManager.SignInAsync(user, isPersistent: false); //Sign in the user
 
-                if (string.IsNullOrEmpty(obj.RedirectUrl))
-                {
-                    return RedirectToAction("Index", "Home");
+                    if (string.IsNullOrEmpty(obj.RedirectUrl))
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    return LocalRedirect(obj.RedirectUrl);
                 }
-                return LocalRedirect(obj.RedirectUrl);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
-
             TempData["error"] = $"Account could not be created";
             obj.RoleList = PopulateRoleList(obj).RoleList; //Populate the role list
             return View(obj);
@@ -150,6 +143,20 @@ namespace WhiteLagoon.Web.Controllers
             });
 
             return obj;
+        }
+
+        private ApplicationUser CopyUserData(RegisterVM obj) //copy the user data from the view model to the ApplicationUser object
+        {
+            return new()
+            {
+                Name = obj.Name,
+                Email = obj.Email,
+                PhoneNumber = obj.PhoneNumber,
+                NormalizedEmail = obj.Email.ToUpper(), //Normalized Email = Email in uppercase
+                EmailConfirmed = true,
+                UserName = obj.Email,
+                CreatedDate = DateTime.Now //When the account was created
+            };
         }
 
     }
