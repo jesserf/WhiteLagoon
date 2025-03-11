@@ -37,7 +37,7 @@ namespace WhiteLagoon.Web.Controllers
             {
                 RedirectUrl = returnUrl
             };
-            return View();
+            return View(loginVM);
         }
 
         [HttpPost]
@@ -79,9 +79,11 @@ namespace WhiteLagoon.Web.Controllers
             return View();
         }
         #region Register
-        public IActionResult Register()
+        public IActionResult Register(string? returnUrl = null)
         {
-            if(!_roleManager.RoleExistsAsync(SD.RoleAdmin).GetAwaiter().GetResult()) //if the role does not exist, then create the two roles, GetResult returns a boolean whilte GetAwaiter returns a task
+            returnUrl ??= Url.Content("~/"); //if url is null, set it to the root of the site
+
+            if (!_roleManager.RoleExistsAsync(SD.RoleAdmin).GetAwaiter().GetResult()) //if the role does not exist, then create the two roles, GetResult returns a boolean whilte GetAwaiter returns a task
             {
                 _roleManager.CreateAsync(new IdentityRole(SD.RoleAdmin)).Wait(); //Will wait for the async method to finish
                 _roleManager.CreateAsync(new IdentityRole(SD.RoleCustomer)).Wait();
@@ -89,6 +91,7 @@ namespace WhiteLagoon.Web.Controllers
 
             RegisterVM registerVM = PopulateRoleList(new RegisterVM()); //Populate the role list
 
+            registerVM.RedirectUrl = returnUrl; //puts returnurl to redirecturl
             return View(registerVM);
         }
 
