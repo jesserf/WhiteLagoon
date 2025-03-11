@@ -97,8 +97,16 @@ namespace WhiteLagoon.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                ApplicationUser user = CopyUserData(obj);
+                ApplicationUser user = new()
+                {
+                    Name = obj.Name,
+                    Email = obj.Email,
+                    PhoneNumber = obj.PhoneNumber,
+                    NormalizedEmail = obj.Email.ToUpper(), //Normalized Email = Email in uppercase
+                    EmailConfirmed = true,
+                    UserName = obj.Email,
+                    CreatedDate = DateTime.Now //When the account was created
+                };
 
                 var result = _userManager.CreateAsync(user, obj.Password).GetAwaiter().GetResult(); //Create the user with the password
 
@@ -144,20 +152,5 @@ namespace WhiteLagoon.Web.Controllers
 
             return obj;
         }
-
-        private ApplicationUser CopyUserData(RegisterVM obj) //copy the user data from the view model to the ApplicationUser object
-        {
-            return new()
-            {
-                Name = obj.Name,
-                Email = obj.Email,
-                PhoneNumber = obj.PhoneNumber,
-                NormalizedEmail = obj.Email.ToUpper(), //Normalized Email = Email in uppercase
-                EmailConfirmed = true,
-                UserName = obj.Email,
-                CreatedDate = DateTime.Now //When the account was created
-            };
-        }
-
     }
 }
